@@ -251,3 +251,341 @@
 </body>
 
 </html>
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Product List</title>
+  <!-- Add Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Add jQuery UI CSS -->
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <style>
+    /* Custom CSS for Product List */
+    body {
+      padding: 20px;
+    }
+
+    .product-card {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 15px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .product-title {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .product-description {
+      color: #666;
+    }
+
+    .product-price {
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .product-image {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      margin-bottom: 10px;
+    }
+
+    .add-to-cart-btn {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 15px;
+      cursor: pointer;
+    }
+
+    .add-to-cart-btn:hover {
+      background-color: #0056b3;
+    }
+
+    /* Custom CSS for Search Bar */
+    .search-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    #button-implement {
+      margin-left: 40px;
+    }
+
+    .search-input {
+      width: 300px;
+      height: 40px;
+      padding: 5px;
+      font-size: 16px;
+    }
+
+    .search-button {
+      margin-left: 10px;
+      height: 40px;
+    }
+
+    /* Custom CSS for Category Buttons */
+    .category-btns {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .category-btn {
+      margin: 0 5px;
+    }
+
+    /* Custom CSS for Search Suggestion Box */
+    .ui-autocomplete {
+      max-height: 200px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      z-index: 1000;
+      background-color: #f5f5f5;
+    }
+
+    .ui-menu-item {
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+
+    .ui-menu-item:hover {
+      background-color: #e5e5e5;
+    }
+  </style>
+</head>
+
+<body>
+  <h1 class="mb-4">
+    <center>MGR-SM Electronics products store</center>
+  </h1>
+  <div class="search-bar">
+    <input type="text" id="search-input" class="form-control search-input" placeholder="Search products...">
+    <button class="btn btn-primary search-button" onclick="searchItem()">Search</button>
+    <button class="btn btn-success" id="button-implement" id="filter-button">Filter</button>
+    <button class="btn btn-success" id="button-implement" onclick="viewCart()" id="cart-button">Cart</button>
+  </div>
+
+  <div class="category-btns">
+    <button class="btn btn-primary category-btn" onclick="filterByCategory('smartphones')">Smartphones</button>
+    <button class="btn btn-primary category-btn" onclick="filterByCategory('laptops')">Laptops</button>
+    <button class="btn btn-primary category-btn" onclick="filterByCategory('fragrances')">Fragrances</button>
+    <button class="btn btn-primary category-btn" onclick="filterByCategory('skincare')">Skincare</button>
+    <button class="btn btn-primary category-btn" onclick="filterByCategory('groceries')">Groceries</button>
+  </div>
+  <div class="row" id="product-list"></div>
+  <div id="cart-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Cart Items</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="cart-items"></div>
+        <div class="modal-footer">
+          <p class="modal-total">Total Price: <span id="cart-total-price">$0</span></p>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Message -->
+  <div aria-live="polite" aria-atomic="true" style="position: fixed; top: 10px; right: 10px;">
+    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000">
+      <div class="toast-header">
+        <strong class="mr-auto">Item Added</strong>
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="toast-body">
+        The item has been added to the cart.
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Add jQuery UI (optional, only needed for autocomplete) -->
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+  <script>
+    let allProductsData;
+    let cart = [];
+
+    // Function to display product data on the web page
+    function displayProducts(products) {
+      const productListDiv = $('#product-list');
+      let html = '';
+      products.forEach((product) => {
+        html += `
+          <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="product-card">
+              <h3 class="product-title">${product.title}</h3>
+              <img class="product-image" src="${product.image}" alt="${product.title}">
+              <p class="product-description">${product.description}</p>
+              <p class="product-price">Price: $${product.price}</p>
+              <button class="add-to-cart-btn" onclick="addToCart(${product.id})">Add to Cart</button>
+            </div>
+          </div>
+        `;
+      });
+      productListDiv.html(html);
+    }
+
+    // Function to add a product to the cart
+    function addToCart(productId) {
+      const productToAdd = allProductsData.products.find(product => product.id === productId);
+      if (productToAdd && !cart.includes(productToAdd)) {
+        cart.push(productToAdd);
+        console.log('Added to cart:', productToAdd);
+        showToast(); // Show the toast message when an item is added to the cart
+      }
+      updateCartTotal();
+      updateCartButton();
+    }
+
+    // Function to remove a product from the cart
+    function removeFromCart(productId) {
+      const index = cart.findIndex(item => item.id === productId);
+      if (index !== -1) {
+        cart.splice(index, 1);
+        console.log('Removed from cart:', productId);
+      }
+      updateCartTotal();
+      updateCartButton();
+      updateCartItems();
+    }
+
+    // Function to view cart contents
+    function viewCart() {
+      const cartItemsDiv = $('#cart-items');
+      let html = '';
+      if (cart.length === 0) {
+        html = '<p>Your cart is empty.</p>';
+      } else {
+        cart.forEach((item) => {
+          html += `
+            <div>
+              <h4>${item.title}</h4>
+              <p>Price: $${item.price}</p>
+              <img src="${item.image}" alt="${item.title}" style="width: 50px; height: 50px; object-fit: cover;">
+              <button class="btn btn-danger" onclick="removeFromCart(${item.id})">Remove</button>
+              <hr>
+            </div>
+          `;
+        });
+      }
+      cartItemsDiv.html(html);
+      $('#cart-modal').modal('show');
+      updateCartTotal();
+    }
+
+    // Function to update the cart total price
+    function updateCartTotal() {
+      const total = cart.reduce((acc, item) => acc + item.price, 0);
+      $('#cart-total-price').text(`$${total.toFixed(2)}`);
+    }
+
+    // Function to update the cart button text
+    function updateCartButton() {
+      const cartButton = $('#cart-button');
+      if (cart.length === 0) {
+        cartButton.text('Cart');
+      } else {
+        cartButton.text(`Cart (${cart.length})`);
+      }
+    }
+
+    // Function to update the cart items display in the cart modal
+    function updateCartItems() {
+      const cartItemsDiv = $('#cart-items');
+      let html = '';
+      if (cart.length === 0) {
+        html = '<p>Your cart is empty.</p>';
+      } else {
+        cart.forEach((item) => {
+          html += `
+            <div>
+              <h4>${item.title}</h4>
+              <p>Price: $${item.price}</p>
+              <img src="${item.image}" alt="${item.title}" style="width: 50px; height: 50px; object-fit: cover;">
+              <button class="btn btn-danger" onclick="removeFromCart(${item.id})">Remove</button>
+              <hr>
+            </div>
+          `;
+        });
+      }
+      cartItemsDiv.html(html);
+      updateCartTotal();
+    }
+
+    // Function to filter products by category
+    function filterByCategory(category) {
+      if (category === 'all') {
+        displayProducts(allProductsData.products);
+      } else {
+        const filteredProducts = allProductsData.products.filter(product => product.category === category);
+        displayProducts(filteredProducts);
+      }
+    }
+
+    // Fetch data from products.json using jQuery AJAX
+    $.getJSON('products.json', function (data) {
+      allProductsData = data;
+      displayProducts(allProductsData.products);
+    })
+      .fail(function (error) {
+        console.error('Error loading products.json:', error);
+      });
+
+    // Search functionality with suggestion box
+    $('#search-input').autocomplete({
+      source: function (request, response) {
+        const searchKeyword = request.term.trim().toLowerCase();
+        const filteredProducts = allProductsData.products.filter(product => product.title.toLowerCase().includes(searchKeyword));
+        const titles = filteredProducts.map(product => product.title);
+        response(titles);
+      }
+    });
+
+    // Search button functionality
+    function searchItem() {
+      const searchKeyword = $('#search-input').val().trim().toLowerCase();
+      const filteredProducts = allProductsData.products.filter(product => product.title.toLowerCase().includes(searchKeyword));
+      displayProducts(filteredProducts);
+    }
+
+    // Function to show the toast message
+    function showToast() {
+      const toast = $('.toast');
+      toast.toast('show');
+    }
+  </script>
+
+  <!-- Add Bootstrap JS (optional, only needed if you want to use Bootstrap JavaScript features) -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
