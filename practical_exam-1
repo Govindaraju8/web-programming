@@ -1,0 +1,75 @@
+/******************************************** 1st program ***********************************************************/
+
+
+/******************************************** 2nd program ***********************************************************/
+
+
+/******************************************** 3rd program **********************************************************/
+
+
+/******************************************** 4th program ***********************************************************/
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browser Functionality Simulation</title>
+</head>
+<body>
+  <h1>Browser Functionality Simulation</h1>
+  <p>Click the links below to simulate browser functionality:</p>
+  
+  <a href="#" id="backLink">Back</a>
+  <a href="#" id="nextLink">Next</a>
+  <a href="#" id="redirectLink">Redirect</a>
+  <a href="#" id="historyLink">History</a>
+  <a href="#" id="reloadLink">Reload</a>
+
+  <script>
+    const backLink = document.getElementById('backLink');
+    const nextLink = document.getElementById('nextLink');
+    const redirectLink = document.getElementById('redirectLink');
+    const historyLink = document.getElementById('historyLink');
+    const reloadLink = document.getElementById('reloadLink');
+    
+    // Simulate going back
+    backLink.addEventListener('click', () => {
+      window.history.back();
+    });
+    
+    // Simulate going forward
+    nextLink.addEventListener('click', () => {
+      window.history.forward();
+    });
+    
+    // Simulate redirecting
+    redirectLink.addEventListener('click', () => {
+      window.location.href = 'https://www.nkxgen.com';
+    });
+    
+    // Show browsing history
+    historyLink.addEventListener('click', () => {
+      const historyList = document.createElement('ul');
+      const historyEntries = window.history.length;
+      
+      for (let i = 0; i < historyEntries; i++) {
+        const historyItem = document.createElement('li');
+        historyItem.textContent = `History entry ${i + 1}`;
+        historyList.appendChild(historyItem);
+      }
+      
+      document.body.appendChild(historyList);
+    });
+    
+    // Reload or refresh the page
+    reloadLink.addEventListener('click', () => {
+      location.reload();
+    });
+  </script>
+</body>
+</html>
+
+
+/************************************************ 5th program ********************************************/
+
