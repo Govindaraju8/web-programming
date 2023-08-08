@@ -6,7 +6,57 @@
 
 /******************************************** 3rd program **********************************************************/
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POST Request Example</title>
+</head>
+<body>
+    <h1>POST Request Example</h1>
+    
+    <form id="postForm">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required><br>
+        <label for="body">Body:</label>
+        <textarea id="body" name="body" required></textarea><br>
+        <button type="button" id="submitBtn">Submit</button>
+    </form>
 
+    <div id="response"></div>
+
+    <script>
+        const submitBtn = document.getElementById('submitBtn');
+        const responseDiv = document.getElementById('response');
+        const postForm = document.getElementById('postForm');
+
+        submitBtn.addEventListener('click', () => {
+            const formData = new FormData(postForm);
+            const postData = {};
+            formData.forEach((value, key) => {
+                postData[key] = value;
+            });
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'https://jsonplaceholder.typicode.com/posts', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 201) {
+                        const responseData = JSON.parse(
+                        xhr.responseText);
+                        responseDiv.textContent =  JSON.stringify(responseData);
+                    } else {
+                        responseDiv.textContent = 'Error: ' + xhr.statusText;
+                    }
+                }
+            };
+            xhr.send(JSON.stringify(postData));
+        });
+    </script>
+</body>
+</html>
 /******************************************** 4th program ***********************************************************/
 
 <!DOCTYPE html>
@@ -121,3 +171,76 @@
 
 /************************************************ 5th program ********************************************/
 
+/*********************************************** 6th program ***********************************************/
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>JSON Display</h1>
+    <table id="json-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>authors</th>
+                <th>Price</th>
+                <th>publish_date</th>
+	<th>title_</th>
+            </tr>
+        </thead>
+        <tbody>
+    </table>
+
+    <script>
+        const jsonString = `
+            [
+                {
+                    "id": 101,
+                    "authors": "Grambell, Matthew",
+                    "price": 650,
+                    "publish_date": "2000-10-01",
+	    "title_": "book1"
+                },
+               {
+                    "id": 102,
+                    "authors": "Rails, Kim",
+                    "price": 225,
+                    "publish_date": "2000-12-16",
+	    "title_": "book2"
+                }
+            ]
+        `;
+
+        const jsonData = JSON.parse(jsonString);
+        const tableBody = document.querySelector('#json-table tbody');
+
+        jsonData.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.id}</td>
+                <td>${item.authors}</td>
+                <td>${item.price}</td>
+                <td>${item.publish_date}</td>
+	<td>${item.title_}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    </script>
+</body>
+</html>
