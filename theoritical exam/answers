@@ -32,6 +32,10 @@ Developers can use these event handlers to trigger specific actions or behaviors
 Single-Page Applications (SPAs): SPAs are web applications that load a single HTML page and dynamically update content as users interact with the page. The DOM 
 is essential for SPAs, as it allows developers to load and update content without navigating to new pages.
 
+
+/***************************************************************************************************************************************************/
+
+
 2nd answer:
 
 explain callback with respect to ajax call function
@@ -123,6 +127,7 @@ XMLHttpRequest (XHR) objects.
 </body>
 </html>
 
+/*********************************************************************************************************************************************/
 
 3rd answer:
 DTD (Document Type Definition) and XSD (XML Schema Definition) are both used for defining the structure and constraints of XML documents,
@@ -184,6 +189,7 @@ for more complex applications or when detailed validation and data typing are re
   </xs:element>
 </xs:schema>
 
+/*****************************************************************************************************************************************************************/
 
 4th answer:
 
@@ -212,6 +218,7 @@ for more complex applications or when detailed validation and data typing are re
   ]
 }
 
+/*****************************************************************************************************************************************************/
 
 5th answer:
 Sure, here are explanations for five DOM (Document Object Model) objects along with one method for each, including syntax and purpose:
@@ -249,6 +256,7 @@ Purpose: Displays an alert dialog box with the specified message, allowing you t
 These are just a few examples of the many objects available in the DOM. Each object serves a specific purpose and provides methods and properties fo
 r interacting with and manipulating the elements and content of a web page.
 
+/**********************************************************************************************************************************/
 
 7th answer:
 
