@@ -127,6 +127,49 @@ XMLHttpRequest (XHR) objects.
 </body>
 </html>
 
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fetch API Example</title>
+</head>
+<body>
+  <h1>Fetch API Example</h1>
+  <p>Click the button to fetch data</p>
+  <button id="fetchButton">Fetch Data</button>
+  <div id="result"></div>
+
+  <script>
+    document.getElementById('fetchButton').addEventListener('click', function() {
+      const apiUrl = 'https://jsonplaceholder.typicode.com/posts/1';
+
+      fetch(apiUrl)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          const resultDiv = document.getElementById('result');
+          const content = `
+            <h2>${data.title}</h2>
+            <p>${data.body}</p>
+          `;
+          resultDiv.innerHTML = content;
+        })
+        .catch(error => {
+          console.error('Fetch error:', error);
+        });
+    });
+  </script>
+</body>
+</html>
+
+
 /*********************************************************************************************************************************************/
 
 3rd answer:
