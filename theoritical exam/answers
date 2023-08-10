@@ -13,7 +13,7 @@ Web Storage: APIs like Local Storage and Session Storage provide a way to store 
 to save user preferences, cached data, and other information.
 
 
-2nd answer:
+1st answer:
 
 The Document Object Model (DOM) serves as a programming interface for web documents, representing the structure and content of a web page as a 
 hierarchical tree of objects. It allows scripts (such as JavaScript) to interact with the content and structure of a webpage dynamically, enabling developers
