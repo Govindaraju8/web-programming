@@ -102,7 +102,7 @@ XMLHttpRequest (XHR) objects.
   <h1>Fetch API Example</h1>
   <div id="data"></div>
 
-  <script>
+  <script> 
     const apiUrl = 'https://jsonplaceholder.typicode.com/posts/1';
 
     fetch(apiUrl)
